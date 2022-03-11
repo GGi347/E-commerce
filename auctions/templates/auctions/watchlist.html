@@ -1,0 +1,7 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% for wishitem in items %}
+    <p>{{ wishitem.user}}</p>
+{% endfor %}
+{% endblock %}

@@ -1,13 +1,20 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>{{ header }}</h2>
     <ul>
         {% for item in items %} 
-        <li>
+        <li >
+            <!-- <img src="{{ item.imageUrl }}" alt="Image"> -->
+            {% if item.imageUrl %}
+            <img src="{{ item.imageUrl }}" alt="Image">
+            {% else %} 
+            <img src="https://st2.depositphotos.com/2102215/46681/v/450/depositphotos_466819550-stock-illustration-image-available-icon-missing-image.jpg" alt="">
+            {% endif %}
             <h3>{{ item.name }}</h3>
             <p>{{ item.price }}</p>
             <p>{{ item.owner }}</p>
+            <a href="{% url 'item' item.id%}">View Item</a>
         </li>
             
         {% endfor %} 

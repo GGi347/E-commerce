@@ -1,0 +1,23 @@
+{% extends 'auctions/layout.html' %} 
+
+{% block body %} 
+{% if item.imageUrl %}
+            <img src="{{ item.imageUrl }}" alt="Image">
+            {% else %} 
+            <img src="https://st2.depositphotos.com/2102215/46681/v/450/depositphotos_466819550-stock-illustration-image-available-icon-missing-image.jpg" alt="">
+            {% endif %}
+
+<p>{{ item.name }}</p>
+<p>{{ item.description }}</p>
+<p>{{ item.price }}</p>
+<p>{{ item.createdDate }}</p>
+<p>{{ item.owner }}</p>
+
+{% if user.is_authenticated %}
+    {% if item in watch_item %} 
+    <a href="{% url 'watchlist' item.id %}">Remove from Watchlist</a>
+    {% else %}
+    <a href="{% url 'watchlist' item.id %}">Add to watchlist</a>
+    {% endif %}
+{% endif %}
+{% endblock %} 

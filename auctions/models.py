@@ -1,3 +1,4 @@
+from email.policy import default
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -11,7 +12,7 @@ class Auction_listing(models.Model):
     price = models.FloatField()
     description = models.CharField(max_length=500, blank=True)
     createdDate = models.DateTimeField(auto_now=True)
-    imageUrl = models.ImageField(null=True, blank=True)
+    imageUrl = models.CharField(null=True, blank=True, max_length=300)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Bids(models.Model):
@@ -26,3 +27,8 @@ class Comments(models.Model):
     comment = models.CharField(max_length=1000)
     commentDate = models.DateTimeField(auto_now=True)
     item = models.ForeignKey(Auction_listing, on_delete=models.CASCADE)
+
+class Watchlist(models.Model):
+    item = models.ManyToManyField(Auction_listing, related_name="wishlist")
+    user = models.ForeignKey(User, related_name="wishlist", on_delete=models.CASCADE, default="DEFAULT VALUE")
+    
