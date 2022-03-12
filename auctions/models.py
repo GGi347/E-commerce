@@ -29,6 +29,7 @@ class Comments(models.Model):
     item = models.ForeignKey(Auction_listing, on_delete=models.CASCADE)
 
 class Watchlist(models.Model):
-    item = models.ManyToManyField(Auction_listing, related_name="wishlist")
-    user = models.ForeignKey(User, related_name="wishlist", on_delete=models.CASCADE, default="DEFAULT VALUE")
+    item = models.ForeignKey(Auction_listing,  default=1, on_delete=models.CASCADE,)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    added_on = models.DateTimeField(auto_now=True)
     

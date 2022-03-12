@@ -84,12 +84,19 @@ body {
     color: black;
 }
 
+.item-content{
+    display: flex;
+    gap: 10%;
+}
+
 
 .item-img {
-    width: 60%;
+    width: 100%;
     height: auto;
     margin: 0 32px;
 }
+
+
 
 
 footer {

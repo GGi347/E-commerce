@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from auctions.forms import AuctionForm
-from .models import Auction_listing, User, Watchlist, Bids
+from .models import Auction_listing, Comments, User, Watchlist, Bids
 from django.contrib import messages
 
 
@@ -87,53 +87,49 @@ def item(request, item_id):
     # watch_item = Watchlist.objects.all()
     # print(watch_item)
     bids= Bids.objects.filter(item=item_id).count()
+    comments = list(Comments.objects.filter(item=item_id))
+    is_watch_item = list(Watchlist.objects.filter(user=request.user.id, item=item_id))
+    is_owner = True if item.owner == request.user else False
+    print(is_owner, item.owner, request.user)
     return render(request, "auctions/item.html", {
         "item": item,
-        "watch_item": item,
+        "is_watch_item": is_watch_item,
         "bids": bids,
+        "comments": comments,
+        "is_owner": is_owner,
     })
 
 @login_required
 def watchlist(request, item_id):
-    item = Auction_listing.objects.get(pk=item_id)
     user = request.user
-    watch_item = Watchlist.objects.filter(item=item, user=user)
+    item = Auction_listing.objects.get(pk=item_id)
+    watch_item = Watchlist.objects.filter(item=item_id, user=user.id)
     if watch_item:
-        print("delete")
         watch_item.delete()
+        messages.add_message(request, messages.INFO, f'Item deleted from the wishlist.')
     else:
-        print("add")
-        item_to_add = Watchlist.objects.create()
+        messages.add_message(request, messages.INFO, f'Item added to the wishlist.')
+        item_to_add = Watchlist.objects.create(item= item, user=user)
         item_to_add.save()
-        item_to_add.item.add(item)
-        item_to_add.user.add(user)
-        print("item to add ",item_to_add.item.all())
+
     
-    return HttpResponseRedirect(reverse("item", args=(item.id,) ))
+    return HttpResponseRedirect(reverse("item", args=(item_id,) ))
 
 
-def show_watchlist(request, user_id):
-    user = User.objects.filter(pk=user_id)
-    wl = Watchlist.objects.filter(user=user)
-    print(wl)
-    # wl = list(user.wishlist.all())
-    # for w in wl:
-    #     print(w.item.all())
-    
-    
-        
-    # objects = wl.item.all()
-    # for w in wl:
-    #     print(type(w.item))
-    # witems = Watchlist.objects.all()
-    # items = []
-    # for witem in witems:
-    #     items.append(witem.item)
+def show_watchlist(request):
+    user_id = request.user.id
+    wish_items = list(Watchlist.objects.filter(user=user_id))
+    items = []
+    for wish_item in wish_items:
+        print(wish_item.item)
+        item = Auction_listing.objects.get(pk=wish_item.item.id)
+        items.append(item)
 
-    return render(request, "auctions/watchlist.html", {
-        "items": wl,
+    return render(request, "auctions/index.html", {
+        "items": items,
         "header": "WatchList"
     })
+    
 
 
 def place_bid(request, item_id):
@@ -153,3 +149,14 @@ def place_bid(request, item_id):
             new_bid = Bids.objects.create(item=item, price=curr_bid, bidder=request.user)
             new_bid.save()
     return HttpResponseRedirect(reverse("item", args=(item_id, )))
+
+
+def add_comment(request, item_id):
+    if request.method == "POST":
+        item = Auction_listing.objects.get(pk=item_id)
+        comment = request.POST["comment"]
+        new_comment = Comments.objects.create(comment=comment, user=request.user, item=item)
+        new_comment.save()
+    return HttpResponseRedirect(reverse("item", args=(item_id, )))
+
+

@@ -9,35 +9,65 @@
             {% endfor %}
             </ul>
         {% endif %}
-        <h2 class="page-header">Listing: {{ item.name }}</h2>
+        
+        
         {% if user.is_authenticated %}
-            {% if item in watch_item %} 
-            <a href="{% url 'watchlist' item.id %}">Remove from Watchlist</a>
+            
+        {% endif %}
+        <div class="item-content">
+            <div class="item-imgs">
+                {% if item.imageUrl %}
+                <img src="{{ item.imageUrl }}" alt="Image"  class="item-img" onerror="this.onerror=null;this.src='https://st2.depositphotos.com/2102215/46681/v/450/depositphotos_466819550-stock-illustration-image-available-icon-missing-image.jpg;'">
+                {% else %} 
+                <img src="https://st2.depositphotos.com/2102215/46681/v/450/depositphotos_466819550-stock-illustration-image-available-icon-missing-image.jpg" alt=""  class="item-img">
+                {% endif %}
+            </div>       
+            <div class="item-detail">
+                <h2 >{{ item.name }}</h2>
+                <p class="item-detail">{{ item.description }}</p>
+                <p>Current Bid: <span>Rs.{{ item.price }}</span></p>
+                <p>{{ item.createdDate }}</p>
+                <p>Listed By: {{ item.owner }}</p>
+
+                {% if user.is_authenticated %}
+                    <span>{{ bids }} people have placed their bids so far.</span>
+                    <form action="{% url 'place-bid' item.id %}", method="post">
+                        {% csrf_token  %}
+                        <input type="number" name="bid-amount" id="bid-amount" placeholder="Bid">
+                        <input type="submit" value="Place Bid">
+                    </form>
+                    {% if is_watch_item %}                    
+                        <a href="{% url 'watchlist' item.id %}">Remove from Watchlist</a>
+                    {% else %}
+                        <a href="{% url 'watchlist' item.id %}">Add to watchlist</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if is_owner %} 
+                    <a href="">Close Bid</a>
+                {% endif %} 
+
+            </div>
+        <hr>
+        </div>
+        <form action="{% url 'add-comment' item.id %}" method="post">
+            {% csrf_token %}
+            <legend>Comment</legend>
+            <textarea name="comment" placeholder="comment" rows="4" cols="60"></textarea>
+            <input type="submit" value="Add Comment">
+        </form>
+        <div class="comments-div">
+            {% if comments %}
+                {% for comment in comments %}
+                    <div class="comment-div">
+                        <div class="comment">{{ comment.comment }}</div>
+                        <div class="comment-by">{{ comment.user }}</div>
+                    </div>
+                {% endfor %}
             {% else %}
-            <a href="{% url 'watchlist' item.id %}">Add to watchlist</a>
+                    <span>No Comments</span>
             {% endif %}
-        {% endif %}
-        <div>
-            {% if item.imageUrl %}
-            <img src="{{ item.imageUrl }}" alt="Image"  class="item-img" onerror="this.onerror=null;this.src='https://st2.depositphotos.com/2102215/46681/v/450/depositphotos_466819550-stock-illustration-image-available-icon-missing-image.jpg;'">
-            {% else %} 
-            <img src="https://st2.depositphotos.com/2102215/46681/v/450/depositphotos_466819550-stock-illustration-image-available-icon-missing-image.jpg" alt=""  class="item-img">
-            {% endif %}
-        </div>       
-
-        <p class="item-detail">{{ item.description }}</p>
-        <p>{{ item.price }}</p>
-        <p>{{ item.createdDate }}</p>
-        <p>{{ item.owner }}</p>
-
-        {% if user.is_authenticated %}
-            <span>{{ bids }} people have placed their bids so far.</span>
-            <form action="{% url 'place-bid' item.id %}", method="post">
-                {% csrf_token  %}
-                <input type="number" name="bid-amount" id="bid-amount" placeholder="Bid">
-                <input type="submit" value="Place Bid">
-            </form>
-        {% endif %}
+        </div>
 
     </div>
 {% endblock %} 
