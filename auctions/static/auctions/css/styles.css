@@ -37,7 +37,7 @@ body {
 }
 
 
-.page-container {
+.page-container{
     grid-column: span 12;
     grid-row: 2 /  3;
 }
@@ -84,6 +84,14 @@ body {
     color: black;
 }
 
+
+.item-img {
+    width: 60%;
+    height: auto;
+    margin: 0 32px;
+}
+
+
 footer {
     grid-column: span 12;
     grid-row: 4 / 5;
@@ -95,3 +103,4 @@ footer {
     background-color: beige;
     padding-right: 16px;
 }
+

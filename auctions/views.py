@@ -5,7 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from auctions.forms import AuctionForm
-from .models import Auction_listing, User, Watchlist
+from .models import Auction_listing, User, Watchlist, Bids
+from django.contrib import messages
 
 
 def index(request):
@@ -83,11 +84,13 @@ def create_listing(request):
 
 def item(request, item_id):
     item = Auction_listing.objects.get(pk=item_id)
-    watch_item = Watchlist.objects.all()
-    print(watch_item)
+    # watch_item = Watchlist.objects.all()
+    # print(watch_item)
+    bids= Bids.objects.filter(item=item_id).count()
     return render(request, "auctions/item.html", {
         "item": item,
-        "watch_item": watch_item
+        "watch_item": item,
+        "bids": bids,
     })
 
 @login_required
@@ -131,3 +134,22 @@ def show_watchlist(request, user_id):
         "items": wl,
         "header": "WatchList"
     })
+
+
+def place_bid(request, item_id):
+    if request.method == "POST":
+        bids = list(Bids.objects.filter(item=item_id))
+        item = Auction_listing.objects.get(pk=item_id)
+        max_bid = item.price
+        for bid in bids:
+            bid_price = bid.price
+            if bid_price > max_bid:
+                max_bid = bid_price
+        curr_bid = float(request.POST["bid-amount"])
+        if curr_bid < max_bid:
+            messages.add_message(request, messages.INFO, f'Please place a bid higher than Rs.{max_bid}')
+            return HttpResponseRedirect(reverse("item", args=(item_id, )))
+        else:
+            new_bid = Bids.objects.create(item=item, price=curr_bid, bidder=request.user)
+            new_bid.save()
+    return HttpResponseRedirect(reverse("item", args=(item_id, )))
