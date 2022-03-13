@@ -10,15 +10,16 @@ body {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: 120px auto 1fr 80px;
-    row-gap: 48px
+    row-gap: 28px
    
 }
+
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid rosybrown;
+    box-shadow: 0 12px 15px 0 rgb(0 0 0 / 6%);
     height: 100%;
     padding-left: 32px;
     grid-column: span 12;
@@ -29,44 +30,38 @@ body {
     color: black;
 }
 
+.page-container{
+    grid-column: span 12;
+    grid-row: 2 /  3;
+    margin-left: 42px;
+    margin-right: 24px;
+    margin-bottom: 48px;
+}
 
 .page-header {
-    margin-left: 32px;
     margin-bottom: 10px;
 
 }
 
 .category {
     list-style-type: none;
-    margin-left: 32px;
-    margin-bottom: 32px;
+    margin-bottom: 40px;
 }
 
 .category>a {
     color: black;
     padding-right: 10%;
 }
-
-.category:target{
-    color:red;
-  }
-
-
-.page-container{
-    grid-column: span 12;
-    grid-row: 2 /  3;
-}
  
-.list-items {
-    
+.list-items {    
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(20%, 400px));
-    grid-auto-rows: minmax(auto, 460px);
+    grid-auto-rows: 540px;
     row-gap: 8%;
     column-gap: 30px;
     justify-content: space-around;
-    margin-bottom: 32px;
-    
+    margin-bottom: 24px;
+    margin-top: 32px
 
 }
 
@@ -74,7 +69,7 @@ body {
     border: 1px solid black;
     display: flex;
     flex-direction: column;
-    gap: 8%;
+    gap: 4%;
     list-style-type: none;
 }
 
@@ -86,17 +81,36 @@ body {
 }
 
 .list-details {
-    margin: 8px;
+   margin: 8px;
    padding-bottom: 8px;
+   text-transform: capitalize;
+   padding: 0 16px;
+   line-height: 1.4;
+   
+}
+
+.list-details>p {
+    padding: 0;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.list-details>p:last-of-type{
+    margin-bottom: 12%;
 }
 
 .list-btn {
-    border-radius: 3px;
-    background-color: beige;
-    padding: 5px 5px;
-    text-align: center;
-    text-decoration: none;
-    color: black;
+    background-color: #ef462f;
+    padding: 12px 20px;
+    border-color: fc624d;
+    box-shadow: 0 29px 24px 0 rgb(0 0 0 / 10%);
+    color: white;
+    border: 1px solid #fc624d;
+    font-size: 16px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
 }
 
 .item-content{

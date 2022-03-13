@@ -20,7 +20,8 @@ def index(request):
     return render(request, "auctions/index.html", {
         "items": items,
         "categories": categories,
-        "header": "Active"
+        "header": "Active",
+        "category": "All",
     })
 
 
@@ -80,10 +81,11 @@ def create_listing(request):
     if request.method == "POST":
         name = request.POST["name"]
         price = request.POST["price"]
-        description = request.POST["description"]
+        short_description = request.POST["short_description"]
+        long_description = request.POST["long_description"]
         imageUrl = request.POST["imageUrl"]
         owner = request.user
-        item = Auction_listing.objects.create(name=name, price=price, description=description, imageUrl=imageUrl, owner=owner)
+        item = Auction_listing.objects.create(name=name, price=price, short_description=short_description, long_description=long_description, imageUrl=imageUrl, owner=owner)
         item.save()
     return render(request, "auctions/create_listing.html", {
         "form": AuctionForm()
@@ -200,9 +202,12 @@ def add_comment(request, item_id):
 def category_listing(request, category_id):
     category = Category.objects.get(pk=category_id)
     categories = Category.objects.all()
-    items = category.item.all()
-    print(items)
-    print("Ca ", category)
+    all_items = category.item.all()
+    items = []
+    for i in all_items:
+        item = Auction_listing.objects.get(pk=i.id)
+        if item.bidOpen:
+            items.append(item)
     return render(request, "auctions/index.html", {
         "items": items,
         "category": category.name,

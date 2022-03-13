@@ -2,13 +2,13 @@
 
 {% block body %}
     <div class="page-container">
-        <h2 class="page-header">{{ header }}</h2>
+        <h2 class="page-header">{{ header }} ({{ category }})</h2>
         <li class="category">    
             {% for category in categories %}
                 <a href="{% url 'category-listing' category.id%}">{{ category.name }}</a>
             {% endfor %}
         </li>
-        <h3>{{ category }}</h3>
+        
         <ul  class="list-items">
             {% for item in items %} 
                 <li class="list-item">
@@ -21,6 +21,7 @@
                     {% endif %}
                     <div class="list-details">
                         <h3>{{ item.name }}</h3>
+                        <p>{{ item.short_description }}</p>
                         <p>Rs.{{ item.price }}</p>
                         <p>Owner: {{ item.owner }}</p>
                         <a href="{% url 'item' item.id%}" class="list-btn">View Item</a>

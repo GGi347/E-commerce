@@ -11,7 +11,8 @@ class User(AbstractUser):
 class Auction_listing(models.Model):
     name = models.CharField(max_length=120)
     price = models.FloatField()
-    description = models.CharField(max_length=500, blank=True)
+    short_description = models.CharField(max_length=100, blank=True)
+    long_description = models.CharField(max_length=500, blank=True)
     createdDate = models.DateTimeField(auto_now=True)
     imageUrl = models.CharField(null=True, blank=True, max_length=300)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
