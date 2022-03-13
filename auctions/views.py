@@ -5,14 +5,21 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from auctions.forms import AuctionForm
-from .models import Auction_listing, Comments, User, Watchlist, Bids
+from .models import Auction_listing, Comments, User, Watchlist, Bids, Category
 from django.contrib import messages
 
 
 def index(request):
-    items = Auction_listing.objects.all()
+    all_items = Auction_listing.objects.all()
+    items = []
+    categories = list(Category.objects.all())
+
+    for item in all_items:       
+        if item.bidOpen:
+            items.append(item)
     return render(request, "auctions/index.html", {
         "items": items,
+        "categories": categories,
         "header": "Active"
     })
 
@@ -86,7 +93,7 @@ def item(request, item_id):
     item = Auction_listing.objects.get(pk=item_id)
     # watch_item = Watchlist.objects.all()
     # print(watch_item)
-    bids= Bids.objects.filter(item=item_id).count()
+    bids= Bids.objects.filter(item=item_id).count() 
     comments = list(Comments.objects.filter(item=item_id))
     is_watch_item = list(Watchlist.objects.filter(user=request.user.id, item=item_id))
     is_owner = True if item.owner == request.user else False
@@ -129,18 +136,36 @@ def show_watchlist(request):
         "items": items,
         "header": "WatchList"
     })
+
+def closed_listing(request):
+    all_items = Auction_listing.objects.all()
+    items = []
+    for item in all_items:       
+        if not item.bidOpen:
+            items.append(item)
+    return render(request, "auctions/index.html", {
+        "items": items,
+        "header": "Closed"
+    })
     
+
+def get_max_bid(item):
+    bids = list(Bids.objects.filter(item=item.id))       
+    max_bid = item.price
+    winner = item.owner
+    for bid in bids:
+        bid_price = bid.price
+        if bid_price > max_bid:
+            max_bid = bid_price
+            winner = bid.bidder
+
+    return (max_bid, winner)
 
 
 def place_bid(request, item_id):
     if request.method == "POST":
-        bids = list(Bids.objects.filter(item=item_id))
         item = Auction_listing.objects.get(pk=item_id)
-        max_bid = item.price
-        for bid in bids:
-            bid_price = bid.price
-            if bid_price > max_bid:
-                max_bid = bid_price
+        max_bid = get_max_bid(item)[0]
         curr_bid = float(request.POST["bid-amount"])
         if curr_bid < max_bid:
             messages.add_message(request, messages.INFO, f'Please place a bid higher than Rs.{max_bid}')
@@ -151,6 +176,18 @@ def place_bid(request, item_id):
     return HttpResponseRedirect(reverse("item", args=(item_id, )))
 
 
+
+def close_bid(request, item_id):
+    item = Auction_listing.objects.get(pk=item_id)
+    item.bidOpen = False
+    winner = get_max_bid(item)[1]
+    item.winner = winner
+    item.save()
+    print("winner ", winner)
+    print("user", request.user)
+    messages.add_message(request, messages.INFO, "The bid has been closed.")
+    return HttpResponseRedirect(reverse("item", args=(item_id, )))
+
 def add_comment(request, item_id):
     if request.method == "POST":
         item = Auction_listing.objects.get(pk=item_id)
@@ -160,3 +197,15 @@ def add_comment(request, item_id):
     return HttpResponseRedirect(reverse("item", args=(item_id, )))
 
 
+def category_listing(request, category_id):
+    category = Category.objects.get(pk=category_id)
+    categories = Category.objects.all()
+    items = category.item.all()
+    print(items)
+    print("Ca ", category)
+    return render(request, "auctions/index.html", {
+        "items": items,
+        "category": category.name,
+        "categories": categories,
+        "header": "Active",
+    })

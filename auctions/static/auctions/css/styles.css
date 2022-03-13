@@ -32,9 +32,24 @@ body {
 
 .page-header {
     margin-left: 32px;
-    margin-bottom: 32px;
+    margin-bottom: 10px;
 
 }
+
+.category {
+    list-style-type: none;
+    margin-left: 32px;
+    margin-bottom: 32px;
+}
+
+.category>a {
+    color: black;
+    padding-right: 10%;
+}
+
+.category:target{
+    color:red;
+  }
 
 
 .page-container{
@@ -95,7 +110,6 @@ body {
     height: auto;
     margin: 0 32px;
 }
-
 
 
 
