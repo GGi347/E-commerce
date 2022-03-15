@@ -261,6 +261,12 @@ textarea[name="comment"] {
     }
 }
 
+/* login forms  */
+
+.form-group > input {
+    width: 400px;
+}
+
 /* footer */
 
 footer {
