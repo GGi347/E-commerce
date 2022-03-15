@@ -2,10 +2,21 @@
 {% block body %} 
 <div class="page-container">
     <h2 class="page-header">Create A Listing</h2>
-    <form action="{% url 'create-listing' %}", method="post" class="form">
+    <form action="{% url 'create-listing' %}", method="post" class="main-forms">
         {% csrf_token %}
-        {{ form }}
-        <input type="submit">
+        {{ form.non_field_errors }}
+        
+        {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                <label for="{{form.field.id_for_label }}" class="field-label">{{field.label_tag }} </label>
+                {{ field }}
+                {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <input type="submit" class="item-btn" value="Create Listing">
     </form>
 </div>
 {% endblock %} 

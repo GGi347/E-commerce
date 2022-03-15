@@ -226,10 +226,39 @@ textarea[name="comment"] {
 
 /* create listing */
 
-.form {
-    display: flex;
-    flex-direction: column;
+.main-forms {  
+    margin-top: 50px;
+
+}
+.fieldWrapper {
+    padding: 14px;
+}
+
+#id_long_description{
+    height: 100px;
     width: 300px;
+    text-align: start;
+    padding: 6px;
+}
+#id_short_description{
+    height: 60px;
+    width: 300px;
+    padding: 6px;
+}
+.fieldWrapper > label {
+    width: 120px;
+    font-weight: bold;
+    
+}
+
+.fieldWrapper > input {
+    padding: 4px;
+}
+
+@media (max-width: 800px) {
+    .fieldWrapper > label {
+        display: block;
+    }
 }
 
 /* footer */
