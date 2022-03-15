@@ -91,6 +91,20 @@ def create_listing(request):
         "form": AuctionForm()
     })
 
+    
+
+def get_max_bid(item):
+    bids = list(Bids.objects.filter(item=item.id))       
+    max_bid = item.price
+    winner = item.owner
+    for bid in bids:
+        bid_price = bid.price
+        if bid_price > max_bid:
+            max_bid = bid_price
+            winner = bid.bidder
+
+    return (max_bid, winner)
+
 def item(request, item_id):
     item = Auction_listing.objects.get(pk=item_id)
     # watch_item = Watchlist.objects.all()
@@ -99,6 +113,7 @@ def item(request, item_id):
     comments = list(Comments.objects.filter(item=item_id))
     is_watch_item = list(Watchlist.objects.filter(user=request.user.id, item=item_id))
     is_owner = True if item.owner == request.user else False
+    max_bid = get_max_bid(item)[0]
     print(is_owner, item.owner, request.user)
     return render(request, "auctions/item.html", {
         "item": item,
@@ -106,6 +121,7 @@ def item(request, item_id):
         "bids": bids,
         "comments": comments,
         "is_owner": is_owner,
+        "max_bid": max_bid,
     })
 
 @login_required
@@ -149,19 +165,7 @@ def closed_listing(request):
         "items": items,
         "header": "Closed"
     })
-    
 
-def get_max_bid(item):
-    bids = list(Bids.objects.filter(item=item.id))       
-    max_bid = item.price
-    winner = item.owner
-    for bid in bids:
-        bid_price = bid.price
-        if bid_price > max_bid:
-            max_bid = bid_price
-            winner = bid.bidder
-
-    return (max_bid, winner)
 
 
 def place_bid(request, item_id):
