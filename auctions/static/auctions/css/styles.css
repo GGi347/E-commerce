@@ -267,6 +267,13 @@ textarea[name="comment"] {
     width: 400px;
 }
 
+/* messages */
+
+.messages > li {
+    list-style-type: none;
+    color: #fc624d;
+}
+
 /* footer */
 
 footer {
