@@ -2,11 +2,15 @@
 <blockquote>
  <p> A website built with Django.</p>
 </blockquote>
+<br>
+
+![auction1](https://github.com/GGi347/E-commerce/assets/48858887/294e3f74-9d53-4134-b9eb-879b6a419ec5)
 
 
-![Screenshot from 2022-03-24 17-10-17](https://user-images.githubusercontent.com/48858887/159909858-64509e05-6c84-41ab-9684-16abf6961d31.png)
+<br>
 
-![Screenshot from 2022-03-24 17-10-48](https://user-images.githubusercontent.com/48858887/159910017-c3981e54-9740-4918-953a-c60bef6f08f5.png)
+![auction2](https://github.com/GGi347/E-commerce/assets/48858887/34817b6c-6079-4eca-b523-75296dcbb1e9)
+<br>
 
 <h2>Features:</h2>
 <ul>
