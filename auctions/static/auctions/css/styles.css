@@ -88,6 +88,7 @@ body {
   list-style-type: none;
   border: 2px solid var(--secondaryColor);
   border-radius: 10px;
+  box-shadow: 0 12px 15px 0 rgb(0 0 0 / 60%);
 }
 
 .list-img {
